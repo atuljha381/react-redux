@@ -1,33 +1,52 @@
-import { createStore } from 'redux'
 
-const counterReducer = (state = { counter: 0, showCounter: true }, action) => {
-    if (action.type === 'increment') {
-        return {
-            counter: state.counter + 1,
-            showCounter: state.showCounter
+import { configureStore, createSlice } from '@reduxjs/toolkit'
+
+const initialCounterState = { counter: 0, showCounter: true }
+
+const counterSlice = createSlice({
+    name: 'counter',
+    initialState: initialCounterState,
+    reducers: {
+        increment(state) {
+            //In react you must never change the original state as we are doing in the next line, which may result in issues later on (especially in big projects with more date). Though Redux Toolkit automatically detects code like this and creates a copy of the same state which is similar to not changing the original state
+            state.counter++;
+        },
+        decrement(state) {
+            state.counter--
+        },
+        increase(state, action) {
+            state.counter = state.counter + action.payload
+        },
+        toggleCounter(state) {
+            state.showCounter = !state.showCounter
         }
     }
-    else if (action.type === 'increase') {
-        return {
-            counter: state.counter + action.val,
-            showCounter: state.showCounter
-        }
-    }
-    else if (action.type === 'decrement') {
-        return {
-            counter: state.counter - 1,
-            showCounter: state.showCounter
-        }
-    }
-    else if(action.type === 'toggle'){
-        return {
-            showCounter: !state.showCounter,
-            counter: state.counter
-        }
-    }
-    return state
+})
+
+const initialAuthState = {
+    isAuthenticated: false
 }
 
-const store = createStore(counterReducer)
+const authSlice = createSlice({
+    name: 'authentication',
+    initialState: initialAuthState,
+    reducers: {
+        login(state) {
+            state.isAuthenticated = true
+        },
+        logout(state) {
+            state.isAuthenticated = false
+        }
+    }
+})
+
+
+
+const store = configureStore({
+    reducer: { counter: counterSlice.reducer, auth: authSlice.reducer }
+})
+
+export const counterActions = counterSlice.actions
+export const authActions = authSlice.actions
 
 export default store

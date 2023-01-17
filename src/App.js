@@ -1,9 +1,14 @@
 import Counter from './components/Counter';
-
+import Header from './components/Header'
+import Authentication from './components/Auth'
 
 function App() {
   return (
-    <Counter />
+    <>
+      <Header />
+      <Authentication />
+      <Counter />
+    </>
   );
 }
 
